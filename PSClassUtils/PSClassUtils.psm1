@@ -787,6 +787,7 @@ Function Get-CUAst {
     }
 }
 
+
 function New-CUGraphExport {
     <#
     .SYNOPSIS
@@ -1650,6 +1651,62 @@ function Get-CUCommands {
     
     return Get-Command -Module PSClassUtils
 }
+
+
+function Get-CULoadedEnum {
+    <#
+    .SYNOPSIS
+        Return all loaded classes in the current PSSession
+    .DESCRIPTION
+        Return all loaded classes in the current PSSession
+    .EXAMPLE
+        PS C:\> <example usage>
+        Explanation of what the example does
+    .INPUTS
+        String
+    .OUTPUTS
+        ASTDocument
+    .NOTES
+        General notes
+    #>
+    [CmdletBinding()]
+    param (
+        [String[]]$Enum = '*'
+    )
+    
+    BEGIN {
+    }
+    
+    PROCESS {
+        
+        Foreach ( $Name in $Enum ) {
+            
+            [Array]$LoadedEnums = [AppDomain]::CurrentDomain.GetAssemblies() |
+                Where-Object { $_.GetCustomAttributes($false) |
+                Where-Object { $_ -is [System.Management.Automation.DynamicClassImplementationAssemblyAttribute]} } |
+                ForEach-Object { 
+                    $_.GetTypes() |
+                    Where-Object IsPublic | Where-Object { $_.Name -like $Name -and $_.baseType.Name -eq 'Enum' } |
+                    Select-Object name,@{l = 'Path'; e = {($_.Module.ScopeName.Replace([char]0x29F9, '\').replace([char]0x589, ':')) -replace '^\\', ''}}
+            }
+
+            If ( ($LoadedEnums | Select-Object -Property Path -Unique) -is [Array]){
+                Foreach ( $Enum in $x ) {
+                    Get-CUAst -Path $Enum.Path
+                }
+            } Else {
+                Get-CUAST -Path ($LoadedEnums | Select-Object -Property Path -Unique).Path
+            }
+
+            
+
+        }
+    }
+    
+    END {
+    }
+}
+
 Function Get-CUEnum{
     <#
     .SYNOPSIS
@@ -1670,7 +1727,7 @@ Function Get-CUEnum{
     .OUTPUTS
         Classenum
     .NOTES   
-        Author: StÃ©phane van Gulick
+        Author: Stéphane van Gulick
         Version: 0.2.0
         
     .LINK
@@ -1680,31 +1737,35 @@ Function Get-CUEnum{
     Param(
  
         [Parameter(Mandatory=$false,ValueFromPipeline=$true)]
-        [String[]]
-        $Path = (throw "Please provide a path")
+        [System.IO.FileInfo[]]$Path
     )
 
    begin{
 
    }
+
    Process{
+        If ( $null -ne $PSBoundParameters['Path']) {
+            foreach($p in $Path){
 
-        foreach($p in $Path){
-
-            $AST = Get-cuast -Path $p | ? {$_.IsEnum -eq $True}
-     
-            foreach($enum in $AST){
-                [ClassEnum]::New($enum.Name,$enum.members.Name)
+                $AST = Get-cuast -Path $p | ? {$_.IsEnum -eq $True}
+         
+                foreach($enum in $AST){
+                    [ClassEnum]::New($enum.Name,$enum.members.Name)
+                }
+            }
+        } Else {
+            Foreach ( $Enum in (Get-CULoadedEnum ) ) {
+                If($Enum.IsEnum){
+                    [ClassEnum]::New($Enum.Name,$Enum.members.Name)
+                }
             }
         }
-       
-
    }
    End{
 
    }
 }
-
 
 
 function Get-CULoadedClass {
@@ -1745,7 +1806,6 @@ function Get-CULoadedClass {
             }
 
             Foreach ( $Class in ($LoadedClasses | Select-Object -Property Path -Unique) ) {
-                #Get-CURaw -Path $Class.Path
                 Get-CUAst -Path $Class.Path
             }
 

@@ -28,30 +28,32 @@ Function Get-CUEnum{
     Param(
  
         [Parameter(Mandatory=$false,ValueFromPipeline=$true)]
-        [String[]]
-        $Path = (throw "Please provide a path")
+        [System.IO.FileInfo[]]$Path
     )
 
    begin{
 
    }
+
    Process{
+        If ( $null -ne $PSBoundParameters['Path']) {
+            foreach($p in $Path){
 
-        foreach($p in $Path){
-
-            $AST = Get-cuast -Path $p | ? {$_.IsEnum -eq $True}
-     
-            foreach($enum in $AST){
-                [ClassEnum]::New($enum.Name,$enum.members.Name)
+                $AST = Get-cuast -Path $p | ? {$_.IsEnum -eq $True}
+         
+                foreach($enum in $AST){
+                    [ClassEnum]::New($enum.Name,$enum.members.Name)
+                }
+            }
+        } Else {
+            Foreach ( $Enum in (Get-CULoadedEnum ) ) {
+                If($Enum.IsEnum){
+                    [ClassEnum]::New($Enum.Name,$Enum.members.Name)
+                }
             }
         }
-       
-
    }
    End{
 
    }
 }
-
-
-
