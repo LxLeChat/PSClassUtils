@@ -16,6 +16,8 @@ steps:
     #get-culture | select *
     dir 'C:\Program Files\NuGet\Packages\Graphviz*\dot.exe' -erroraction silentlycontinue
     dir 'C:\program files*\GraphViz*\bin\dot.exe' -erroraction silentlycontinue
+    dir 'D:\program files*\GraphViz*\bin\dot.exe' -erroraction silentlycontinue
+    dir 'C:\Program Files\NuGet\Packages\Graphviz*\dot.exe' -erroraction silentlycontinue
     .\CI\02_install.ps1
     "[Running Pesters Scripts...]"
     .\CI\tests.ps1
