@@ -12,7 +12,8 @@ pool:
 
 steps:
 - powershell: |
-    .\CI\02_install.ps1
+    [System.Text.Encoding]::Default
+    #.\CI\02_install.ps1
     "[Running Pesters Scripts...]"
-    .\CI\tests.ps1
+    #.\CI\tests.ps1
   displayName: 'Pwsh: Run Pester Script(s)'
