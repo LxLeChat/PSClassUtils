@@ -11,7 +11,7 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
-- powershell: |
+- pwsh: |
     [System.Text.Encoding]::Default
     #.\CI\02_install.ps1
     "[Running Pesters Scripts...]"
