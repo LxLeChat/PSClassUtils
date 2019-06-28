@@ -4,6 +4,6 @@
 #Start-Sleep -Seconds 2;
 
 #Install-PackageProvider -Name NuGet -Force -Scope "CurrentUser";
-Install-Module -Name PSGraph -Force -verbose -Scope "CurrentUser";
+Install-Module -Name PSGraph -Force -verbose -Scope "CurrentUser" -AllowClobber;
 Install-Module -Name PSScriptAnalyzer -Force -Scope "CurrentUser";
 Install-Module -Name Pester -Force -verbose -Scope "CurrentUser";
