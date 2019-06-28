@@ -4,16 +4,15 @@
 # https://aka.ms/yaml
 
 trigger:
-- testazdevop
+- azure-pipelines
 
 pool:
-  vmImage: 'ubuntu-latest'
+  namme: 'Windows Tests'
+  vmImage: 'windows-2019'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- powershell: |
+    .\CI\02_install.ps1
+    "[Running Pesters Scripts...]"
+    .\CI\tests.ps1
+  displayName: 'Pwsh: Run Pester Script(s)'
