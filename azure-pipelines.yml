@@ -15,6 +15,6 @@ steps:
     #[System.Text.Encoding]::Default
     #get-culture | select *
     .\CI\02_install.ps1
-    "[Running Pesters Scripts...]"
-    .\CI\tests.ps1
+    #"[Running Pesters Scripts...]"
+    #.\CI\tests.ps1
   displayName: 'Pwsh: Run Pester Script(s)'
