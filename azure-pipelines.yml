@@ -12,11 +12,7 @@ pool:
 
 steps:
 - powershell: |
-    #.\CI\02_install.ps1
+    .\CI\02_install.ps1
     "[Running Pesters Scripts...]"
-    #.\CI\tests.ps1
-    pwd
-    dir
-    $path = (pwd).Path
-    $FullPath = $(join-Path -Path $path -ChildPath "PSClassUtils\tests")
+    .\CI\tests.ps1
   displayName: 'Pwsh: Run Pester Script(s)'
