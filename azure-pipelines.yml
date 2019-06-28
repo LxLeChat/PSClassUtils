@@ -14,6 +14,8 @@ steps:
 - pwsh: |
     #[System.Text.Encoding]::Default
     #get-culture | select *
+    dir 'C:\Program Files\NuGet\Packages\Graphviz*\dot.exe'
+    dir 'C:\program files*\GraphViz*\bin\dot.exe'
     .\CI\02_install.ps1
     "[Running Pesters Scripts...]"
     .\CI\tests.ps1
