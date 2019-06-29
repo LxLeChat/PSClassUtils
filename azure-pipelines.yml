@@ -7,7 +7,7 @@ trigger:
 - azure-pipelines
 
 pool:
-  namme: 'Windows Tests'
+  namme: 'Windows 2019 Tests'
   vmImage: 'windows-2019'
 
 steps:
@@ -15,4 +15,20 @@ steps:
     .\CI\02_install.ps1
     "[Running Pesters Scripts...]"
     .\CI\tests.ps1
-  displayName: 'Pwsh: Run Pester Script(s)'
+  displayName: 'PSCore: Run Pester Script(s)'
+- powershell: |
+    .\CI\02_install.ps1
+    "[Running Pesters Scripts...]"
+    .\CI\tests.ps1
+  displayName: 'Powershell STANDARD: Run Pester Script(s)'
+
+pool:
+  namme: 'Windows 2012 R2 Tests'
+  vmImage: 'vs2015-win2012r2'
+
+steps:
+- powershell: |
+    .\CI\02_install.ps1
+    "[Running Pesters Scripts...]"
+    .\CI\tests.ps1
+  displayName: 'Powershell STANDARD: Run Pester Script(s)'
