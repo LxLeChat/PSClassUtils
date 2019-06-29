@@ -21,14 +21,3 @@ steps:
     "[Running Pesters Scripts...]"
     .\CI\tests.ps1
   displayName: 'Powershell STANDARD: Run Pester Script(s)'
-
-pool:
-  namme: 'Windows 2012 R2 Tests'
-  vmImage: 'vs2015-win2012r2'
-
-steps:
-- powershell: |
-    .\CI\02_install.ps1
-    "[Running Pesters Scripts...]"
-    .\CI\tests.ps1
-  displayName: 'Powershell STANDARD: Run Pester Script(s)'
