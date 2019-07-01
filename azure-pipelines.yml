@@ -17,9 +17,6 @@ jobs:
       .\CI\tests.ps1
     displayName: 'PSCore: Run Pester Script(s)'
   - powershell: |
-      $host
-      $host.version
-      Set-Culture -CultureInfo fr-FR
       .\CI\02_install.ps1
       "[Running Pesters Scripts...]"
       .\CI\tests.ps1

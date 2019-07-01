@@ -1,4 +1,4 @@
-﻿#Generated at 03/10/2019 21:20:24 by Stephane van Gulick
+﻿#Generated at 07/01/2019 20:06:17 by Stephane van Gulick
 #Needed for 07_CUInterfaceAuthor
 
 using namespace System.Collections.Generic
@@ -898,23 +898,23 @@ function Get-CUClass {
         } Else {
             
             Foreach ( $x in (Get-CULoadedClass @ClassParams ) ) {
-
-                If ( $PSBoundParameters['ClassName'] ) {
-                    If ( $x.name -eq $PSBoundParameters['ClassName'] ) {
+                If ( !$x.IsEnum ){
+                    If ( $PSBoundParameters['ClassName'] ) {
+                        If ( $x.name -eq $PSBoundParameters['ClassName'] ) {
+                            If ( $PSBoundParameters['Raw'] ) {
+                                ([CUClass]::New($x)).Raw
+                            } Else {
+                                [CUClass]::New($x)
+                            }
+                        }
+                    } Else {
                         If ( $PSBoundParameters['Raw'] ) {
                             ([CUClass]::New($x)).Raw
                         } Else {
                             [CUClass]::New($x)
                         }
                     }
-                } Else {
-                    If ( $PSBoundParameters['Raw'] ) {
-                        ([CUClass]::New($x)).Raw
-                    } Else {
-                        [CUClass]::New($x)
-                    }
                 }
-                
             } 
         }
     }
@@ -1279,7 +1279,7 @@ Function Get-CUClassProperty {
     Param(
         [Alias("FullName")]
         [Parameter(ParameterSetName = "Path", Position = 1, Mandatory = $False, ValueFromPipeline = $True, ValueFromPipelineByPropertyName = $True)]
-        [System.IO.FileInfo[]]$Path,
+        [String[]]$Path,
         
         [Parameter(Mandatory=$False, ValueFromPipeline=$False)]
         [String[]]$ClassName,
@@ -1304,7 +1304,8 @@ Function Get-CUClassProperty {
         }
 
         If ($Path -or $PSBoundParameters['Path'] ) {
-            $ClassParams.Path = $Path.FullName
+            $item=Get-Item -Path (Resolve-Path -Path $Path).path 
+            $ClassParams.Path = $Item.FullName
         }
 
         If ($InputObject) {
@@ -1398,35 +1399,41 @@ Function Get-CUEnum{
     #>
     [cmdletBinding()]
     Param(
- 
-        [Parameter(Mandatory=$false,ValueFromPipeline=$true)]
-        [String[]]
-        $Path = (throw "Please provide a path")
+        [Alias("FullName")]
+        [Parameter(ValueFromPipeline=$True,Position=1,ValueFromPipelineByPropertyName=$True)]
+        [string[]]$Path
     )
 
    begin{
 
    }
+
    Process{
-
-        foreach($p in $Path){
-
-            $AST = Get-cuast -Path $p | ? {$_.IsEnum -eq $True}
-     
-            foreach($enum in $AST){
-                [ClassEnum]::New($enum.Name,$enum.members.Name)
+        ForEach( $p in $Path) {
+            Write-Verbose "ICI"
+            $item = get-item (resolve-path -path $p).path
+                If ( $item -is [system.io.FileInfo] -and $item.Extension -in @('.ps1','.psm1') ) {
+                Write-Verbose "[Get-CUEnum][Path] $($item.FullName)"
+                $AST = Get-cuast -Path $item.FullName | Where-Object IsEnum
+        
+                foreach($enum in $AST){
+                    [ClassEnum]::New($enum.Name,$enum.members.Name)
+                }
             }
         }
-       
 
+        If ( $null -eq $PSBoundParameters['Path']) {
+            Foreach ( $Enum in (Get-CULoadedClass ) ) {
+                If($Enum.IsEnum){
+                    [ClassEnum]::New($Enum.Name,$Enum.members.Name)
+                }
+            }
+        }
    }
    End{
 
    }
 }
-
-
-
 function Get-CULoadedClass {
     <#
     .SYNOPSIS
