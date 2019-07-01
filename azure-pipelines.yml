@@ -19,6 +19,7 @@ jobs:
   - powershell: |
       $host
       $host.version
+      Set-Culture -Cultre fr-FR
       .\CI\02_install.ps1
       "[Running Pesters Scripts...]"
       .\CI\tests.ps1
