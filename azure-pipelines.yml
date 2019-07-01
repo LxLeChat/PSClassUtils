@@ -19,30 +19,8 @@ jobs:
   - powershell: |
       $host
       $host.version
-      Set-Culture -Cultre fr-FR
+      Set-Culture -CultureInfo fr-FR
       .\CI\02_install.ps1
       "[Running Pesters Scripts...]"
       .\CI\tests.ps1
-    displayName: 'Powershell STANDARD: Run Pester Script(s)'
-- job: 'TestJob2016'
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - powershell: |
-      $host
-      $host.version
-      #.\CI\02_install.ps1
-      #"[Running Pesters Scripts...]"
-      #.\CI\tests.ps1
-    displayName: 'Powershell STANDARD: Run Pester Script(s)'
-- job: 'TestJob2012R2'
-  pool:
-    vmImage: 'vs2015-win2012r2'
-  steps:
-  - powershell: |
-      $host
-      $host.version
-      #.\CI\02_install.ps1
-      #"[Running Pesters Scripts...]"
-      #.\CI\tests.ps1
     displayName: 'Powershell STANDARD: Run Pester Script(s)'
