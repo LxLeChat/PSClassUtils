@@ -19,9 +19,9 @@ jobs:
   - powershell: |
       $host
       $host.version
-      #.\CI\02_install.ps1
-      #"[Running Pesters Scripts...]"
-      #.\CI\tests.ps1
+      .\CI\02_install.ps1
+      "[Running Pesters Scripts...]"
+      .\CI\tests.ps1
     displayName: 'Powershell STANDARD: Run Pester Script(s)'
 - job: 'TestJob2016'
   pool:
