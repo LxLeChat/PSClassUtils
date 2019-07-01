@@ -17,25 +17,31 @@ jobs:
       .\CI\tests.ps1
     displayName: 'PSCore: Run Pester Script(s)'
   - powershell: |
-      .\CI\02_install.ps1
-      "[Running Pesters Scripts...]"
-      .\CI\tests.ps1
+      $host
+      $host.version
+      #.\CI\02_install.ps1
+      #"[Running Pesters Scripts...]"
+      #.\CI\tests.ps1
     displayName: 'Powershell STANDARD: Run Pester Script(s)'
 - job: 'TestJob2016'
   pool:
     vmImage: 'vs2017-win2016'
   steps:
   - powershell: |
-      .\CI\02_install.ps1
-      "[Running Pesters Scripts...]"
-      .\CI\tests.ps1
+      $host
+      $host.version
+      #.\CI\02_install.ps1
+      #"[Running Pesters Scripts...]"
+      #.\CI\tests.ps1
     displayName: 'Powershell STANDARD: Run Pester Script(s)'
 - job: 'TestJob2012R2'
   pool:
     vmImage: 'vs2015-win2012r2'
   steps:
   - powershell: |
-      .\CI\02_install.ps1
-      "[Running Pesters Scripts...]"
-      .\CI\tests.ps1
+      $host
+      $host.version
+      #.\CI\02_install.ps1
+      #"[Running Pesters Scripts...]"
+      #.\CI\tests.ps1
     displayName: 'Powershell STANDARD: Run Pester Script(s)'
